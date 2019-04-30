@@ -8,20 +8,22 @@ var items = {};
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
 exports.create = (text, callback) => {
-  counter.getNextUniqueId((err, number) => {
+  counter.getNextUniqueId((err, id) => {
     if (err) {
       throw 'error!!!';
     } else {
-      fs.writeFile(path.join(exports.dataDir, `${number}.txt`), text, (err) => {
+      fs.writeFile(path.join(exports.dataDir, `${id}.txt`), text, (err) => {
         if (err) {
           throw 'error!';
         } else {
-          callback(err, {id: text});
+          // console.log("number", number)
+          // console.log('text:', text);
+          callback(null, {id, text}); //callback(null, {id, text}) ??
         }
-      })  
+      });
     }
-  })
-}
+  });
+};
 // Naming the file after the text?  Todo needs to have property text
 
 exports.readAll = (callback) => {
