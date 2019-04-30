@@ -44,33 +44,38 @@ const writeCounter = (count, callback) => {  //0. writeCounter (counter, (err, )
 // };
 
 exports.getNextUniqueId = (callback) => {
-  callback(null, () => {
+  readCounter((err, id) => {
     if (err) {
-      console.log("1 err:", err);
-      throw 'error!';
+      throw 'error!!';
     } else {
-      readCounter((err, id) => {
+      writeCounter(id + 1, (err, num) => {
         if (err) {
-          console.log("2 err:", err);
-          throw 'error!!';
+          throw 'error!!!';
         } else {
-          console.log("3 id:", id);
-          writeCounter(id, (err, num) => {
-            if (err) {
-              console.log("4 err:", err);
-              throw 'error!!!';
-            } else {
-              console.log("5 id:", id);
-              console.log("6 err:", err);
-              console.log("7 num:", num);
-              return num;
-            }
-          })
+          callback(err, num);
         }
       })
     }
   })
-};
+}
+
+// exports.getNextUniqueId = (callback) => {
+//       readCounter((err, id) => {
+//         if (err) {
+//           throw 'error!!';
+//         } else {
+//           callback(writeCounter(id, (err, num) => {
+//             if (err) {
+//               throw 'error!!!';
+//             } else {
+//               return num;
+//             }
+//           }))
+//         }
+//       })
+//     }
+// };
+
 
 
 
