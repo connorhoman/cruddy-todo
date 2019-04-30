@@ -35,6 +35,7 @@ $(() => {
   // Controller //////////////////////////////////////////////////////////////////
 
   $('#form button').click( (event) => {
+    console.log('click!')
     var text = $('#form input').val().trim();
     if (text) {
       Todo.create(text, addTodo);
