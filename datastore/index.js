@@ -10,11 +10,11 @@ var items = {};
 exports.create = (text, callback) => {
   counter.getNextUniqueId((err, id) => {
     if (err) {
-      throw 'error!!!';
+      callback(err);
     } else {
       fs.writeFile(path.join(exports.dataDir, `${id}.txt`), text, (err) => {
         if (err) {
-          throw 'error!';
+          callback(err);
         } else {
           callback(null, {id, text}); 
         }
@@ -58,25 +58,62 @@ exports.readOne = (id, callback) => {
   })
 };
 
+// exports.update = (id, text, callback) => {
+//   var item = items[id];
+//   if (!item) {
+//     callback(new Error(`No item with id: ${id}`));
+//   } else {
+//     items[id] = text;
+//     callback(null, { id, text });
+//   }
+// };
+
 exports.update = (id, text, callback) => {
-  var item = items[id];
-  if (!item) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    items[id] = text;
-    callback(null, { id, text });
-  }
+  var location = path.join(exports.dataDir, `${id}.txt`);
+
+  fs.readFile(location, (err, fileData) => {
+    if (err) {
+      callback (err);
+    } else {
+      fs.writeFile(location, text, (err) => {
+        if (err) {
+          callback(err)
+        } else {
+          callback(null, {id, text})
+        }
+      })
+    }
+  })
 };
 
+// exports.delete = (id, callback) => {
+//   var item = items[id];
+//   delete items[id];
+//   if (!item) {
+//     // report an error if item not found
+//     callback(new Error(`No item with id: ${id}`));
+//   } else {
+//     callback();
+//   }
+// };
+
 exports.delete = (id, callback) => {
-  var item = items[id];
-  delete items[id];
-  if (!item) {
-    // report an error if item not found
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback();
-  }
+  var location = path.join(exports.dataDir, `${id}.txt`);
+
+  fs.readFile(location, (err, fileData) => {
+    if (err) {
+      callback (err);
+    } else {
+      // fs.writeFile(location, text, (err) => {
+        fs.unlink(location, (err) => {
+          if (err) {
+            callback(err)
+          } else {
+            callback(null, {id})
+          }
+      })
+    }
+  })
 };
 
 // Config+Initialization code -- DO NOT MODIFY /////////////////////////////////
